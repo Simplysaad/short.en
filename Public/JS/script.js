@@ -2,6 +2,7 @@ fetch("/get-all-urls")
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        console.log(data[0]);
         
         data.forEach(url=>{
           console.log(url);
