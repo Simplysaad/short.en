@@ -23,16 +23,17 @@
 
     <main class="container">
       <h3 class="text-center my-3 mt-5 display-3">Link <strong>Shortener</strong></h3>
-      <form class="border p-3 my-5 mx-auto" action="/" method="post">
+      <form class="border p-3 my-5 mx-auto" action="/create-link" method="post">
         <div class="form-floating">
-          <input class="form-control" name="originalUrl" placeholder="" id="inputLink" type="url" >
+          <input class="form-control" required name="originalUrl" placeholder="" id="inputLink" type="url" >
           <label for="inputLink">Enter the Original Link</label>
         </div>
         <button class="btn btn-lg btn-outline-danger my-5 col-12">Shorten Link</button>
       </form>
     </main>
     
-        <script src="/script.js" ></script>
+    
+        <script src="/JS/script.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.js"></script>
     </body>
 </html>
