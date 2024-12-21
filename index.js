@@ -37,7 +37,7 @@ app.get("/get-all-urls", async (req, res) => {
 });
 
 // Create link
-app.get("/create-link", async (req, res) => {
+app.get("/", async (req, res) => {
     try {
         res.render("create-url", {});
     } catch (err) {
@@ -46,7 +46,7 @@ app.get("/create-link", async (req, res) => {
     }
 });
 
-app.post("/create-link", async (req, res) => {
+app.post("/", async (req, res) => {
     try {
         const { originalUrl } = req.body;
         const shortUrl = getRandomText(12);
@@ -70,7 +70,7 @@ app.get("/:shortUrl", async (req, res) => {
         if (currentUrl) {
             res.redirect(currentUrl.originalUrl);
         } else {
-            res.redirect("/create-link");
+            res.redirect("/");
         }
     } catch (err) {
         console.error(err);
