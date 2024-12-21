@@ -12,7 +12,7 @@ connectDb();
 
 app.set("view engine", "ejs");
 app.set("views", "Views/");
-app.use(express.static("./public"));
+app.use(express.static("./Public"));
 
 const PORT = process.env.PORT || 3000;
 
