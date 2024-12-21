@@ -13,13 +13,9 @@ connectDb();
 
 app.set("view engine", "ejs");
 app.set("views", "Views/");
-app.use(express.static(path.join(__dirname, 'Public'), {
-  setHeaders: function (res, path, stat) {
-    if (path.endsWith('.js')) {
-      res.set('Content-Type', 'application/javascript');
-    }
-  }
-}));
+app.use(express.static("./Public"));
+
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -57,7 +53,7 @@ app.post("/", async (req, res) => {
     try {
         const { originalUrl } = req.body;
         console.log(originalUrl);
-        
+
         const shortUrl = getRandomText(12);
         console.log(shortUrl);
 
