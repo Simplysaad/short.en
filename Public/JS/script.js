@@ -5,7 +5,7 @@ fetch("/get-all-urls")
         console.log(data[0]);
         
         data.forEach(url=>{
-          console.log(url);
+          console.log(url.shortUrl);
         })
     });
 
