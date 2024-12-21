@@ -1,3 +1,7 @@
+fetch("/get-all-urls")
+    .then(response => response.json())
+    .then(data => console.log(data));
+
 const copyValue = (btn, inputElement) => {
     btn.addEventListener("click", e => {
         e.preventDefault();
