@@ -32,7 +32,7 @@ const getRandomText = require("./random-text-generator.js");
 app.get("/get-all-urls", async (req, res) => {
     try {
         const urls = await url.find({});
-        return res.json({urls});
+        return res.json(urls);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Internal Server Error" });
