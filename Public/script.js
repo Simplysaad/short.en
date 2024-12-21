@@ -35,6 +35,7 @@ const copyValue = (btn, inputElement) => {
 
         // Copy the text to the clipboard
         navigator.clipboard
+        .writeText(textToCopy)
             .then(() => {
                 console.log("Text copied to clipboard");
             })
