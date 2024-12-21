@@ -49,7 +49,10 @@ app.get("/", async (req, res) => {
 app.post("/", async (req, res) => {
     try {
         const { originalUrl } = req.body;
+        console.log(originalUrl);
+        
         const shortUrl = getRandomText(12);
+        console.log(shortUrl);
 
         const newUrl = new url({ originalUrl, shortUrl });
         const savedUrl = await newUrl.save();
