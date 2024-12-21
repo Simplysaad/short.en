@@ -29,8 +29,6 @@
             </h3>
             <div
                 class="border p-3 my-5 mx-auto"
-                action="/create-link"
-                method="post"
             >
                 <div class="my-5">
                     <label class="text-muted" for="originalUrl"
@@ -60,7 +58,7 @@
                             class="muted form-control"
                             disabled
                             id="shortUrl"
-                            value="localhost:3000/<%= currentUrl.shortUrl %>"
+                            value="short-en.onrender.com/<%= currentUrl.shortUrl %>"
                             class="form-control"
                         />
                         <button class="btn btn-danger" id="shortUrlBtn">
