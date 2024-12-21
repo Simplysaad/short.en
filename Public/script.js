@@ -9,9 +9,8 @@ const copyValue = (btn, text) => {
         e.preventDefault();
         navigator.clipboard
             .writeText(text.value)
-            .then(data => {
-                alert(`you copied ${data} to clipboard`);
-                console.log(data);
+            .then(() => {
+                console.log("text copied to clipboard");
             })
             .catch(err => {
                 console.error("failed to copy text", err);
