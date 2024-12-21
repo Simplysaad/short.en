@@ -8,6 +8,7 @@
         <meta property="og:description" content="<%= locals.description%>" />
         <meta property="og:image" content="<%= locals.imageUrl%>" />
         <meta charset="utf-8" />
+        <script src="/script.js" defer></script>
 
         <meta name="author" content="simplysaad" />
         <link rel="stylesheet" href="/CSS/style.css" />
@@ -28,6 +29,8 @@
             </h3>
             <div
                 class="border p-3 my-5 mx-auto"
+                action="/create-link"
+                method="post"
             >
                 <div class="my-5">
                     <label class="text-muted" for="originalUrl"
@@ -57,19 +60,18 @@
                             class="muted form-control"
                             disabled
                             id="shortUrl"
-                            value="short-en.onrender.com/<%= currentUrl.shortUrl %>"
+                            value="localhost:3000/<%= currentUrl.shortUrl %>"
                             class="form-control"
                         />
                         <button class="btn btn-danger" id="shortUrlBtn">
                             <i class="fa fa-clipboard"></i>
                         </button>
                     </div>
-                    <a class="text-break" href="/<%= currentUrl.shortUrl %>">short-en.onrender.com/<%= currentUrl.shortUrl %></a>
+                    <a class="text-break" href="/<%= currentUrl.shortUrl %>">localhost:8000/<%= currentUrl.shortUrl %></a>
                 </div>
             </div>
         </main>
-        
-        <script src="/script.js" ></script>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.js"></script>
     </body>
 </html>
