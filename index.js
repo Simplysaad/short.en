@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const connectDb = require("./db.js");
 
 const app = express();
@@ -12,7 +13,13 @@ connectDb();
 
 app.set("view engine", "ejs");
 app.set("views", "Views/");
-app.use(express.static("./Public"));
+app.use(express.static(path.join(__dirname, 'Public'), {
+  setHeaders: function (res, path, stat) {
+    if (path.endsWith('.js')) {
+      res.set('Content-Type', 'application/javascript');
+    }
+  }
+}));
 
 const PORT = process.env.PORT || 3000;
 
