@@ -1,6 +1,12 @@
 fetch("/get-all-urls")
     .then(response => response.json())
-    .then(data => console.log(data));
+    .then(data => {
+        console.log(data);
+        
+        data.forEach(url=>{
+          console.log(url);
+        })
+    });
 
 const copyValue = (btn, inputElement) => {
     btn.addEventListener("click", e => {
