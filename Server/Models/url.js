@@ -19,7 +19,7 @@ const urlSchema = new mongoose.Schema({
   }],
   expiryDate:{
     type: Date
-  }
+  },
   dateCreated: {
     type: Date,
     default: Date.now
