@@ -168,12 +168,13 @@ app.post("/api", async (req, res) => {
 
     const newUrl = new url({ originalUrl, shortUrl, shortUrlId, expiryDate });
     const savedUrl = await newUrl.save();
-
+    
+    console.log(originalUrl)
     return res.status(200).json({
       ...savedUrl
     })
   } catch (err) {
     console.error(err);
-    res.status(500).json({ "message": "Internal Server Error", "error": err });
+    return res.status(500).json({ "message": "Internal Server Error", "error": err });
   }
 })
