@@ -173,7 +173,7 @@ app.post("/api", async (req, res) => {
     
     console.log("originalUrl", originalUrl)
     return res.status(200).json({
-      ...savedUrl
+      data: savedUrl._doc
     })
   } catch (err) {
     console.error(err);
