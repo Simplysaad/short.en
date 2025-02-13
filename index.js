@@ -117,10 +117,10 @@ app.post("/", async (req, res) => {
  * @returns {void} Redirects to original URL or home page
  * @throws {500} Internal Server Error if database operation fails
  */
-app.get("/:shortUrl", async (req, res) => {
+app.get("/:shortUrlId", async (req, res) => {
   try {
-    const shortUrl = req.params.shortUrl;
-    const currentUrl = await url.findOne({ shortUrl });
+    const shortUrlId = req.params.shortUrlId;
+    const currentUrl = await url.findOne({ shortUrlId });
 
     if (currentUrl) {
       url.updateOne({
