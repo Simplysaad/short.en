@@ -79,12 +79,12 @@ app.get("/:shortUrl", async (req, res) => {
       }, {
         $inc: {
           clickCount: 1
-        }, 
+        },
         $push: {
           timestamps: Date.now
         }
       })
-      
+
       res.redirect(currentUrl.originalUrl);
     } else {
       res.redirect("/");
@@ -97,20 +97,20 @@ app.get("/:shortUrl", async (req, res) => {
 
 
 // --- API ---
-app.post("/api/", async(req, res)=>{
+app.post("/api/", async (req, res) => {
   try {
     const { originalUrl, preferredText, expiryDays = 30 } = req.body;
-    
-    let shortUrlId = getRandomText(12);
-    
-    if(preferredText)
-     shortUrlId = preferredText;
-    
+
+    let shortUrlId = preferredText;
+
+    if (!preferredText)
+      shortUrlId = getRandomText(12);
+
     let shortUrl = "short-en.onrender.com/" + shortUrlId
-     
+
     let currentDate = Date.now()
-    let expiryDate = new Date(currentDate + (expiryDays*24*60*60*1000))
-    
+    let expiryDate = new Date(currentDate + (expiryDays * 24 * 60 * 60 * 1000))
+
     const newUrl = new url({ originalUrl, shortUrl, shortUrlId, expiryDate });
     const savedUrl = await newUrl.save();
 
