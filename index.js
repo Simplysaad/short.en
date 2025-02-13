@@ -97,7 +97,7 @@ app.get("/:shortUrl", async (req, res) => {
 
 
 // --- API ---
-app.post("/api/", async (req, res) => {
+app.post("/api", async (req, res) => {
   try {
     const { originalUrl, preferredText, expiryDays = 30 } = req.body;
 
