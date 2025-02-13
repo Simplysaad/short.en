@@ -1,34 +1,60 @@
+/**
+ * @file Main application entry point and configuration
+ * @requires dotenv Environment variable configuration
+ * @requires express Web framework
+ * @requires mongoose MongoDB object modeling
+ * @requires path File path utilities
+ * @requires ./db.js Database connection module
+ */
+
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const connectDb = require("./db.js");
 
+/** 
+ * @constant {express.Application} app Express application instance
+ */
 const app = express();
 
+// Configure middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Initialize database connection
 connectDb();
 
+// Configure view engine
 app.set("view engine", "ejs");
 app.set("views", "Views/");
 app.use(express.static("./Public"));
 
-
-
+/**
+ * @constant {number} PORT Server port from environment or default 3000
+ */
 const PORT = process.env.PORT || 3000;
 
+// Start server
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
 
-//Routing
-
+// Routing
+/**
+ * @module url URL Model
+ * @requires ./Server/Models/url
+ */
 const url = require("./Server/Models/url");
 const getRandomText = require("./random-text-generator.js");
 
-// Get all URLs
+/**
+ * @route GET /get-all-urls
+ * @description Get all shortened URLs from database
+ * @async
+ * @returns {Promise<Array>} JSON array of URL objects
+ * @throws {500} Internal Server Error if database query fails
+ */
 app.get("/get-all-urls", async (req, res) => {
   try {
     const urls = await url.find({});
@@ -39,7 +65,13 @@ app.get("/get-all-urls", async (req, res) => {
   }
 });
 
-// Create link
+/**
+ * @route GET /
+ * @description Render URL creation form
+ * @async
+ * @returns {Promise<void>} Rendered HTML view
+ * @throws {500} Internal Server Error if template rendering fails
+ */
 app.get("/", async (req, res) => {
   try {
     res.render("create-url", {});
@@ -49,6 +81,14 @@ app.get("/", async (req, res) => {
   }
 });
 
+/**
+ * @route POST /
+ * @description Create new shortened URL
+ * @async
+ * @param {string} req.body.originalUrl Original URL to shorten
+ * @returns {Promise<void>} Rendered confirmation view with new URL
+ * @throws {500} Internal Server Error if database operation fails
+ */
 app.post("/", async (req, res) => {
   try {
     const { originalUrl } = req.body;
@@ -67,7 +107,14 @@ app.post("/", async (req, res) => {
   }
 });
 
-// Redirect to original URL
+/**
+ * @route GET /:shortUrl
+ * @description Redirect to original URL and track clicks
+ * @async
+ * @param {string} req.params.shortUrl Short URL identifier
+ * @returns {void} Redirects to original URL or home page
+ * @throws {500} Internal Server Error if database operation fails
+ */
 app.get("/:shortUrl", async (req, res) => {
   try {
     const shortUrl = req.params.shortUrl;
@@ -95,8 +142,16 @@ app.get("/:shortUrl", async (req, res) => {
   }
 });
 
-
-// --- API ---
+/**
+ * @route POST /api
+ * @description API endpoint for URL shortening
+ * @async
+ * @param {string} req.body.originalUrl Original URL to shorten
+ * @param {string} [req.body.preferredText] Optional custom short text
+ * @param {number} [req.body.expiryDays=30] Optional expiration days (default 30)
+ * @returns {Promise<Object>} JSON response with created URL object
+ * @throws {500} Internal Server Error if database operation fails
+ */
 app.post("/api", async (req, res) => {
   try {
     const { originalUrl, preferredText, expiryDays = 30 } = req.body;
