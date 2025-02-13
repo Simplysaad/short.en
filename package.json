@@ -52,6 +52,7 @@
     "cookie-parser": "^1.4.7",
     "cookie-signature": "^1.0.6",
     "core-util-is": "^1.0.3",
+    "cors": "^2.8.5",
     "debug": "^2.6.9",
     "define-data-property": "^1.1.4",
     "delayed-stream": "^1.0.0",
