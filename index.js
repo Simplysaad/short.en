@@ -94,3 +94,27 @@ app.get("/:shortUrl", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+
+// --- API ---
+app.post("/api/", async(req, res)=>{
+  try {
+    const { originalUrl } = req.body;
+
+    const shortUrl = getRandomText(12);
+    let currentDate = Date.now()
+    let expiryDate = new Date(currentDate + (30*24*60*60*1000))
+    
+    
+    
+    const newUrl = new url({ originalUrl, shortUrl, expiryDate });
+    const savedUrl = await newUrl.save();
+
+    return res.status(200).json({
+      ...savedUrl
+    })
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+})
