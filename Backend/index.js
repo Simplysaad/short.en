@@ -57,9 +57,8 @@ const PORT = process.env.PORT || 3000;
 // Start server
 app.listen(PORT, () => {
   connectDb();
-
   console.log(`App listening on port ${PORT}`);
 });
 
-app.use("/api", mainRoutes);
 app.use("/auth", authRoutes);
+app.use("/", mainRoutes);
