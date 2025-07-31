@@ -13,7 +13,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const path = require("path");
-const connectDb = require("./db.js");
+const connectDb = require("./Server/Models/Config/db.js");
 
 /** 
  * @constant {express.Application} app Express application instance
@@ -47,8 +47,8 @@ app.listen(PORT, () => {
  * @module url URL Model
  * @requires ./Server/Models/url
  */
-const url = require("./Server/Models/url");
-const getRandomText = require("./random-text-generator.js");
+const url = require("./Server/Models/Routes/url.route.js");
+const getRandomText = require("./Server/Models/Utils/random-text-generator.js");
 
 /**
  * @route GET /get-all-urls

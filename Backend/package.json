@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "link shortener with analytics",
+  "keywords": [
+    "analytics",
+    "link",
+    "shortener",
+    "short.en"
+  ],
+  "homepage": "https://github.com/simplysaad/short.en#readme",
+  "bugs": {
+    "url": "https://github.com/simplysaad/short.en/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simplysaad/short.en.git"
+  },
+  "license": "MIT",
+  "author": "saad idris",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  }
+}
