@@ -4,34 +4,51 @@
  * @requires express Web framework
  * @requires mongoose MongoDB object modeling
  * @requires path File path utilities
- * @requires ./db.js Database connection module
+ * @requires ./Server/Config/db.js Database connection module
  */
 
-require("dotenv").config();
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+import { config } from "dotenv";
+config();
 
-const path = require("path");
-const connectDb = require("./Server/Models/Config/db.js");
+import express, { json, urlencoded } from "express";
+import cors from "cors";
+import morgan from "morgan";
 
-/** 
+import session from "express-session";
+import MongoStore from "connect-mongo";
+
+import connectDb from "./Server/Config/db.js";
+import errorMiddleware from "./Server/Utils/error.middleware.js";
+import mainRoutes from "./Server/Routes/main.routes.js";
+import authRoutes from "./Server/Routes/auth.routes.js";
+
+/**
  * @constant {express.Application} app Express application instance
  */
 const app = express();
 
 // Configure middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cors())
-// Initialize database connection
-connectDb();
+app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(cors());
+app.use(errorMiddleware);
+app.use(morgan("dev"));
 
-// Configure view engine
-app.set("view engine", "ejs");
-app.set("views", "Views/");
-app.use(express.static("./Public"));
-
+app.use(
+  session({
+    store: new MongoStore({
+      mongoUrl: process.env.MONGO_URI,
+    }),
+    secret: process.env.SECRET_KEY,
+    saveUninitialized: true,
+    resave: false,
+    cookie: {
+      maxAge: 360000,
+      secure: false, // change to true in production
+      httpOnly: true,
+    },
+  })
+);
 /**
  * @constant {number} PORT Server port from environment or default 3000
  */
@@ -39,148 +56,11 @@ const PORT = process.env.PORT || 3000;
 
 // Start server
 app.listen(PORT, () => {
+  connectDb();
+
   console.log(`App listening on port ${PORT}`);
 });
 
-// Routing
-/**
- * @module url URL Model
- * @requires ./Server/Models/url
- */
-const url = require("./Server/Models/Routes/url.route.js");
-const getRandomText = require("./Server/Models/Utils/random-text-generator.js");
-
-/**
- * @route GET /get-all-urls
- * @description Get all shortened URLs from database
- * @async
- * @returns {Promise<Array>} JSON array of URL objects
- * @throws {500} Internal Server Error if database query fails
- */
-app.get("/get-all-urls", async (req, res) => {
-  try {
-    const urls = await url.find({});
-    return res.json(urls);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-/**
- * @route GET /
- * @description Render URL creation form
- * @async
- * @returns {Promise<void>} Rendered HTML view
- * @throws {500} Internal Server Error if template rendering fails
- */
-app.get("/", async (req, res) => {
-  try {
-    res.render("create-url", {});
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-/**
- * @route POST /
- * @description Create new shortened URL
- * @async
- * @param {string} req.body.originalUrl Original URL to shorten
- * @returns {Promise<void>} Rendered confirmation view with new URL
- * @throws {500} Internal Server Error if database operation fails
- */
-app.post("/", async (req, res) => {
-  try {
-    const { originalUrl } = req.body;
-    console.log(originalUrl);
-
-    const shortUrl = getRandomText(12);
-    console.log(shortUrl);
-
-    const newUrl = new url({ originalUrl, shortUrl });
-    const savedUrl = await newUrl.save();
-
-    return res.render("confirmation", { currentUrl: savedUrl });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-/**
- * @route GET /:shortUrl
- * @description Redirect to original URL and track clicks
- * @async
- * @param {string} req.params.shortUrl Short URL identifier
- * @returns {void} Redirects to original URL or home page
- * @throws {500} Internal Server Error if database operation fails
- */
-app.get("/:shortUrlId", async (req, res) => {
-  try {
-    const shortUrlId = req.params.shortUrlId;
-    const currentUrl = await url.findOne({ shortUrlId });
-
-    if (currentUrl) {
-      url.updateOne({
-        _id: currentUrl._id
-      }, {
-        $inc: {
-          clickCount: 1
-        },
-        $push: {
-          timestamps: Date.now
-        }
-      })
-
-      res.redirect(currentUrl.originalUrl);
-    } else {
-      res.redirect("/");
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-/**
- * @route POST /api
- * @description API endpoint for URL shortening
- * @async
- * @param {string} req.body.originalUrl Original URL to shorten
- * @param {string} [req.body.preferredText] Optional custom short text
- * @param {number} [req.body.expiryDays=30] Optional expiration days (default 30)
- * @returns {Promise<Object>} JSON response with created URL object
- * @throws {500} Internal Server Error if database operation fails
- */
-app.post("/api", async (req, res) => {
-  try {
-    const { originalUrl, preferredText, expiryDays = 30 } = req.body;
-
-    let shortUrlId = preferredText;
-
-    if (!preferredText)
-      shortUrlId = getRandomText(12);
-
-    let shortUrl = "short-en.onrender.com/" + shortUrlId
-
-    let currentDate = Date.now()
-    let expiryDate = new Date(currentDate + (expiryDays * 24 * 60 * 60 * 1000))
-
-    const newUrl = new url({ originalUrl, shortUrl, shortUrlId, expiryDate });
-    const savedUrl = await newUrl.save();
-    
-    console.log("originalUrl", originalUrl)
-    return res.status(200).json({
-      data: savedUrl._doc
-    })
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ 
-      "message": "Internal Server Error", 
-      "error": err.message,
-      "stack": err.stack
-    });
-  }
-})
+app.use("/api", mainRoutes);
+// app.use("/auth", authRoutes);
+app.use("/", authRoutes);
