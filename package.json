@@ -5,15 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run start --prefix Backend & npm run build --prefix Frontend"
+    "start": "npm run start --prefix Backend && npm run build --prefix Frontend"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/simplysaad/short.en.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "saad idris",
+  "license": "MIT",
   "type": "module",
   "bugs": {
     "url": "https://github.com/simplysaad/short.en/issues"
