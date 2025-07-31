@@ -98,7 +98,7 @@ router.get("/:shortUrlId", async (req, res) => {
  */
 router.post("/", async (req, res) => {
   try {
-    let { originalUrl, customShortLink, expiryDate, expiryClicks } = req.body;
+    let { originalUrl, preferredText, expiryDate, expiryClicks } = req.body;
     // const { userId } = req.session;
 
     const shortLinkId = getRandomText(5);
@@ -119,7 +119,7 @@ router.post("/", async (req, res) => {
       role: "admin", // remove before production
       shortLinkId,
       expiryDate,
-      customShortLink,
+      preferredText,
     });
 
     await newLink.save();

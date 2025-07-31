@@ -5,7 +5,7 @@ const linkSchema = new Schema(
     originalUrl: { type: String, required: true }, // needed
     shortLinkId: { type: String, unique: true, required: true }, // needed
     userId: { type: Schema.Types.ObjectId, ref: "user" }, // needed
-    customShortLink: { type: String }, // needed
+    preferredText: { type: String }, // needed
 
     expiryDate: { type: Date }, // needed
     expiryClicks: { type: Number }, // needed
