@@ -32,7 +32,6 @@ router.get("/", async (req, res) => {
     // }
     // data.currentUserLinks = await Link.find({ userId: currentUser._id });
 
-
     const allLinks = await Link.find();
 
     // const currentUserLinks = await Link.find({ userId: currentUser._id });
@@ -42,8 +41,8 @@ router.get("/", async (req, res) => {
       message: "current user links retrieved",
       data: {
         // currentUserLinks,
-        allLinks
-      }
+        allLinks,
+      },
     });
   } catch (err) {
     console.error(err);
@@ -59,10 +58,12 @@ router.get("/", async (req, res) => {
  * @returns {void} Redirects to original URL or home page
  * @throws {500} Internal Server Error if database operation fails
  */
-router.get("/:shortUrlId", async (req, res) => {
+router.get("/:shortLinkId", async (req, res) => {
   try {
-    const shortUrlId = req.params.shortUrlId;
-    const currentUrl = await Link.findOne({ shortUrlId });
+    const { shortLinkId } = req.params
+    const currentUrl = await Link.findOne({
+      $or: [{ shortLinkId }, { preferredText: shortLinkId }],
+    });
 
     if (currentUrl) {
       await Link.updateOne(
@@ -101,11 +102,21 @@ router.post("/", async (req, res) => {
     let { originalUrl, preferredText, expiryDate, expiryClicks } = req.body;
     // const { userId } = req.session;
 
+    preferredText = preferredText.trim().replace(" ", "-")
+
+    const isLinkExist = await Link.findOne({ preferredText });
+
+    if(isLinkExist){
+      preferredText += "-" + getRandomText(3)
+    }
+
     const shortLinkId = getRandomText(5);
     let expiryType = "never";
 
     if (expiryDate) {
-      expiryDate = new Date(Date.now() + parseInt(expiryDate) * 24 * 60 * 60 * 1000);
+      expiryDate = new Date(
+        Date.now() + parseInt(expiryDate) * 24 * 60 * 60 * 1000
+      );
       expiryType = "expiryDate";
     }
 
@@ -127,7 +138,7 @@ router.post("/", async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "link shortened successfully",
-      data: {newLink},
+      data: { newLink },
     });
   } catch (err) {
     console.error(err);

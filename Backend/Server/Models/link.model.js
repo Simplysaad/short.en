@@ -32,12 +32,14 @@ const linkSchema = new Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
 
 linkSchema.virtual("shortLink").get(function () {
-  return "https://short-en.onrender.com/" + this.shortLinkId;
+  return process.env.BASE_URL + (this.preferredText || this.shortLinkId)
 });
 
-const Link = new model("link", linkSchema);
+const Link = model("link", linkSchema);
 export default Link;

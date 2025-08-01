@@ -1,4 +1,1 @@
-* {
-  margin: 10px;
-  border: 1px solid;
-}
+@import "tailwindcss"

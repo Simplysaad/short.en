@@ -6,7 +6,7 @@ const ConfirmationForm = () => {
 
   return (
     <>
-      <div className="border p-3 my-5 mx-auto" action="/" method="post">
+      <div className="border p-3 my-5 mx-auto " action="/" method="post">
         <div className="my-5">
           <label className="text-muted" for="originalUrl">
             Original Url
