@@ -5,36 +5,58 @@ import axios from "axios";
 const UrlShortenerForm = () => {
   const [originalUrl, setOriginalUrl] = useState("");
   const [preferredText, setPreferredText] = useState("");
-  const [shortenedUrl, setShortenedUrl] = useState({});
+  const [shortenedUrl, setShortenedUrl] = useState("");
+  const [copySuccess, setCopySuccess] = useState("");
+  const api = import.meta.env.VITE_API_URL;
 
   function handleSubmit(e) {
     e.preventDefault();
 
-    console.log("hello world");
     axios
-      .post("http://localhost:5000/", {
+      .post(api, {
         originalUrl,
         preferredText,
       })
-      .then((response) => setShortenedUrl(response.data.data.newLink))
+      .then((response) => setShortenedUrl(response.data.data.newLink.shortLink))
       .catch((err) => console.error(err));
+  }
+  function handleCopy(e) {
+    e.preventDefault();
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(shortenedUrl);
+      setCopySuccess("Shortened link copied successfully!");
+      setTimeout(() => setCopySuccess(""), 2000);
+    }
+  }
+  function handlePaste(e) {
+    e.preventDefault();
+    if (navigator.clipboard) {
+      navigator.clipboard.readText().then((text) => {
+        setOriginalUrl(text);
+      });
+    }
   }
 
   return (
-    <form
-      // onSubmit={handleSubmit}
-      className="my-5 flex flex-col gap-3 col-auto mx-auto"
-    >
-      <p className="">{shortenedUrl.shortLink}</p>
+    <form className="my-5 flex flex-col gap-3 col-auto mx-auto">
       <div className="rounded flex flex-col gap-1">
         <label htmlFor="inputLink" className="text-gray-600">
           Enter the Original Link
         </label>
-        <input
-          className="rounded border p-2"
-          value={originalUrl}
-          onChange={(e) => setOriginalUrl(e.target.value)}
-        />
+        <div className="flex">
+          <input
+            className="rounded border p-2"
+            value={originalUrl}
+            onChange={(e) => setOriginalUrl(e.target.value)}
+          />
+          <button
+            className="p-1 border rounded col-span-2"
+            onClick={handlePaste}
+          >
+            <i className="fa fa-clipboard"></i>
+            <span className="">Paste</span>
+          </button>
+        </div>
       </div>
       <div className="rounded flex flex-col gap-1">
         <label htmlFor="inputLink" className="text-gray-600">
@@ -47,14 +69,28 @@ const UrlShortenerForm = () => {
           onChange={(e) => setPreferredText(e.target.value)}
         />
       </div>
-      <div className="rounded flex flex-col gap-1">
-        <span className="text-black me-3">Your short url:</span>
-        <a className="" target="_blank" href={shortenedUrl.shortLink}>
-          {shortenedUrl.shortLink}
-        </a>
-        <span className="">
-          <i className="fa fa-clipboard"></i>
-        </span>
+      <div className="gap-1">
+        <span className="text-black me-3 block">Your short url:</span>
+        <div className="flex gap-1">
+          <a
+            className=""
+            target="_blank"
+            rel="noopener noreferrer "
+            href={shortenedUrl}
+          >
+            {shortenedUrl}
+          </a>
+          <button
+            className="col-span-2 bg-auto rounded border p-1"
+            onClick={handleCopy}
+          >
+            <i className="fa fa-clipboard"></i>
+            <span className="">Copy</span>
+          </button>
+        </div>
+        {copySuccess && (
+          <span className="text-green-600 text-sm">{copySuccess}</span>
+        )}
       </div>
       <button
         type="submit"

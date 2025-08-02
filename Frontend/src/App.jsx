@@ -4,7 +4,7 @@ import ConfirmationForm from "./Components/ConfirmationForm.jsx";
 
 const App = () => {
   return (
-    <main className="container flex justify-center align-middle flex-col">
+    <main data-theme="dark" className="container flex justify-center align-middle flex-col">
       <UrlShortenerForm />
       {/* <ConfirmationForm /> */}
     </main>
