@@ -3,8 +3,8 @@ import { useState } from "react";
 import axios from "axios";
 
 const UrlShortenerForm = () => {
-  const [originalUrl, setOriginalUrl] = useState("https://simplysaad.github.io");
-  const [preferredText, setPreferredText] = useState("saad idris");
+  const [originalUrl, setOriginalUrl] = useState("");
+  const [preferredText, setPreferredText] = useState("");
   const [shortenedUrl, setShortenedUrl] = useState({});
 
   function handleSubmit(e) {
@@ -16,9 +16,7 @@ const UrlShortenerForm = () => {
         originalUrl,
         preferredText,
       })
-      .then((response) =>
-        setShortenedUrl(response.data.data.newLink)
-      )
+      .then((response) => setShortenedUrl(response.data.data.newLink))
       .catch((err) => console.error(err));
   }
 
@@ -50,16 +48,13 @@ const UrlShortenerForm = () => {
         />
       </div>
       <div className="rounded flex flex-col gap-1">
-        <span className="text-black me-3">
-          Your short url: 
-        </span>
-        <a
-          className=""
-          target="_blank"
-          href={shortenedUrl.shortLink}
-        >
+        <span className="text-black me-3">Your short url:</span>
+        <a className="" target="_blank" href={shortenedUrl.shortLink}>
           {shortenedUrl.shortLink}
         </a>
+        <span className="">
+          <i className="fa fa-clipboard"></i>
+        </span>
       </div>
       <button
         type="submit"
