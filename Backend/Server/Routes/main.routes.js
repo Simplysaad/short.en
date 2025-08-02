@@ -60,7 +60,7 @@ router.get("/", async (req, res) => {
  */
 router.get("/:shortLinkId", async (req, res) => {
   try {
-    const { shortLinkId } = req.params
+    const { shortLinkId } = req.params;
     const currentUrl = await Link.findOne({
       $or: [{ shortLinkId }, { preferredText: shortLinkId }],
     });
@@ -102,12 +102,12 @@ router.post("/", async (req, res) => {
     let { originalUrl, preferredText, expiryDate, expiryClicks } = req.body;
     // const { userId } = req.session;
 
-    preferredText = preferredText.trim().replace(" ", "-")
-
-    const isLinkExist = await Link.findOne({ preferredText });
-
-    if(isLinkExist){
-      preferredText += "-" + getRandomText(3)
+    if (preferredText) {
+      preferredText = preferredText.trim();
+      const isLinkExist = await Link.findOne({ preferredText });
+      if (isLinkExist) {
+        preferredText += "-" + getRandomText(3);
+      }
     }
 
     const shortLinkId = getRandomText(5);
